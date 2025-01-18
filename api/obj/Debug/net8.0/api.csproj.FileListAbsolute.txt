@@ -117,3 +117,13 @@ C:\Users\kaspr\Робочий стіл\backend\api\obj\Debug\net8.0\refint\api.d
 C:\Users\kaspr\Робочий стіл\backend\api\obj\Debug\net8.0\api.pdb
 C:\Users\kaspr\Робочий стіл\backend\api\obj\Debug\net8.0\api.genruntimeconfig.cache
 C:\Users\kaspr\Робочий стіл\backend\api\obj\Debug\net8.0\ref\api.dll
+C:\Users\kaspr\Робочий стіл\backend\api\obj\Debug\net8.0\api.sourcelink.json
+C:\Users\kaspr\Робочий стіл\backend\api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\kaspr\Робочий стіл\backend\api\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\kaspr\Робочий стіл\backend\api\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\kaspr\Робочий стіл\backend\api\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\kaspr\Робочий стіл\backend\api\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\kaspr\Робочий стіл\backend\api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\kaspr\Робочий стіл\backend\api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\kaspr\Робочий стіл\backend\api\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\kaspr\Робочий стіл\backend\api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
