@@ -12,7 +12,7 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250118170830_Identity")]
+    [Migration("20250119145004_Identity")]
     partial class Identity
     {
         /// <inheritdoc />
@@ -49,6 +49,20 @@ namespace api.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "b4923101-72e9-4941-a168-c5ad9dfeecfc",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "0c8900b9-5696-4950-92d4-1447a904a088",
+                            Name = "Client",
+                            NormalizedName = "CLIENT"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -199,6 +213,10 @@ namespace api.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -208,28 +226,6 @@ namespace api.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
-
-                    b.Property<string>("confirmPassword")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("role")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("userName")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

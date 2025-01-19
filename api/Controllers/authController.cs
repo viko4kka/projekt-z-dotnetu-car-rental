@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Dtos.User;
+using api.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -10,32 +13,65 @@ namespace api.Controllers
 
     [Route("api/user")]
     [ApiController]
-    public class authController : ControllerBase
+    public class AuthController : ControllerBase
     {
-
-        private readonly ApplicationDBContext _context;
-        public authController(ApplicationDBContext context)
+        private readonly UserManager<User> _userManager; 
+        private readonly SignInManager<User> _signInManager;
+        
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
-            _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
-
-        [HttpGet("user")]
-        public IActionResult GetAll()
+      
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            var users = _context.Users.ToList();
+            try{
 
-            return Ok(users);
-        }
+                if(!ModelState.IsValid){
+                    return BadRequest(ModelState);
+                }
 
-        [HttpGet("user/{id}")]
-        public IActionResult GetUserById([FromRoute] int id){
-            var user = _context.Users.Find(id);
+                //sprawdzene czy przeslana rola jest prawidlowa
+                var validRoles = new List<string> {"Admin", "Client"};
+                if(!validRoles.Contains(registerDto.Role))
+                {
+                    return BadRequest("Invalid role");
+                }
 
-            if(user == null){
-                return NotFound();
+                var user = new User
+                {
+                    UserName = registerDto.Username,
+                    Email = registerDto.Email
+                };
+
+                var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
+
+                if(createdUser.Succeeded){
+
+                    var roleResult = await _userManager.AddToRoleAsync(user, "Client");
+                    
+                    if(roleResult.Succeeded){
+                        return Ok("User created successfully");
+                    } 
+                    else 
+                    {
+                        return StatusCode(500, "Failed to create user");
+                    }
+
+                } 
+                else{
+                    return StatusCode(500,"Failed to create user");
+                }
+
+            } catch(Exception e)
+            {
+                return StatusCode(500, e.Message);
             }
-
-            return Ok(user);
         }
+       
     }
 }
+
+//UserManager class is used to manage user information

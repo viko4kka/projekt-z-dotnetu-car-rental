@@ -4,19 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace api.Models;
-
-public enum Role {
-
-    Admin, 
-    Client
-}
+namespace api.Models
+{
     public class User : IdentityUser
     {
-        public int id { get; set; }
-        public string userName { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
-        public string confirmPassword { get; set; }
-        public Role role { get; set; }
+        public string Role { get; set; } = "Client"; // Domyślna rola, jeśli nie zostanie podana
     }
+}

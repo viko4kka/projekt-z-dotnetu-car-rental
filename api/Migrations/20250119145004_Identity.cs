@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace api.Migrations
 {
     /// <inheritdoc />
@@ -31,12 +33,7 @@ namespace api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    id = table.Column<int>(type: "integer", nullable: false),
-                    userName = table.Column<string>(type: "text", nullable: false),
-                    email = table.Column<string>(type: "text", nullable: false),
-                    password = table.Column<string>(type: "text", nullable: false),
-                    confirmPassword = table.Column<string>(type: "text", nullable: false),
-                    role = table.Column<int>(type: "integer", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -161,6 +158,15 @@ namespace api.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "0c8900b9-5696-4950-92d4-1447a904a088", null, "Client", "CLIENT" },
+                    { "b4923101-72e9-4941-a168-c5ad9dfeecfc", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
