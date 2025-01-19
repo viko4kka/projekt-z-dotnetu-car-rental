@@ -39,7 +39,7 @@ namespace api.Service
                 Audience = _config["JWT:Audience"]
             };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenHandler = new JwtSecurityTokenHandler(); // klasa odpowiedzialna za tworzenie tokenu jwt i konwersje go na string
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
