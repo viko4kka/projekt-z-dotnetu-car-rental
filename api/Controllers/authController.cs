@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.User;
+using api.Interface;
 using api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +18,13 @@ namespace api.Controllers
     {
         private readonly UserManager<User> _userManager; 
         private readonly SignInManager<User> _signInManager;
+        private readonly ITokenService _tokenService;
         
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, ITokenService tokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _tokenService = tokenService;
         }
       
         [HttpPost("register")]
@@ -53,7 +56,14 @@ namespace api.Controllers
                     var roleResult = await _userManager.AddToRoleAsync(user, "Client");
                     
                     if(roleResult.Succeeded){
-                        return Ok("User created successfully");
+                        return Ok(
+                            new NewUserDto
+                            {
+                                UserName = user.UserName,
+                                Email = user.Email,
+                                Token = _tokenService.CreateToken(user)
+                            }
+                        );
                     } 
                     else 
                     {
