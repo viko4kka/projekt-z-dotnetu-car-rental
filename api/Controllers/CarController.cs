@@ -9,6 +9,7 @@ using api.Dtos.Car;
 
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -23,17 +24,18 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCars(){
-            var cars = _context.Cars.ToList()
-            .Select( s=> s.ToCarDto());
+        public async Task<IActionResult> GetAllCars(){
+            var cars = await _context.Cars.ToListAsync();
+
+            var carDto = cars.Select( s=> s.ToCarDto());
 
             return Ok(cars);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetCarById([FromRoute] int id )
+        public async Task<IActionResult> GetCarById([FromRoute] int id )
         {
-            var car = _context.Cars.Find(id);
+            var car = await _context.Cars.FindAsync(id);
 
             if(car == null)
             {
@@ -44,12 +46,12 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCar([FromBody] CreateCarRequestDto carDto)
+        public async Task<IActionResult> CreateCar([FromBody] CreateCarRequestDto carDto)
         {
             var carModel = carDto.ToCarFromCreateDto();
 
-            _context.Cars.Add(carModel);
-            _context.SaveChanges();
+           await  _context.Cars.AddAsync(carModel);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCarById), new {id = carModel.CarId}, carModel.ToCarDto());
         }
@@ -57,9 +59,9 @@ namespace api.Controllers
         [HttpPut]
         [Route("{id}")]
 
-        public IActionResult UpdateCar([FromRoute] int id, [FromBody] UpdateCarRequestDto updateCarDto)
+        public async Task<IActionResult> UpdateCar([FromRoute] int id, [FromBody] UpdateCarRequestDto updateCarDto)
         {
-            var carModel = _context.Cars.FirstOrDefault( x=> x.CarId == id);
+            var carModel = await _context.Cars.FirstOrDefaultAsync( x=> x.CarId == id);
 
             if(carModel == null)
             {
@@ -77,7 +79,7 @@ namespace api.Controllers
             carModel.Status = updateCarDto.Status;
             carModel.ImageUrl = updateCarDto.ImageUrl;
 
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
 
             return Ok(carModel.ToCarDto());
 
@@ -86,9 +88,9 @@ namespace api.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult DeleteCar([FromRoute] int id)
+        public async Task<IActionResult> DeleteCar([FromRoute] int id)
         {
-            var carModel = _context.Cars.FirstOrDefault( x=> x.CarId == id);
+            var carModel = await _context.Cars.FirstOrDefaultAsync( x=> x.CarId == id);
 
             if(carModel == null)
             {
@@ -96,7 +98,7 @@ namespace api.Controllers
             }
 
             _context.Cars.Remove(carModel);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return NoContent();
 
