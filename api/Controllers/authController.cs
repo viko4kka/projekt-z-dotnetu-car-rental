@@ -39,7 +39,7 @@ namespace api.Controllers
 
                 //sprawdzene czy przeslana rola jest prawidlowa
                 var validRoles = new List<string> {"Admin", "Client"};
-                if(!validRoles.Contains(registerDto.Role))
+                if(!validRoles.Contains(registerDto.Role, StringComparer.OrdinalIgnoreCase))
                 {
                     return BadRequest("Invalid role");
                 }
@@ -108,8 +108,35 @@ namespace api.Controllers
                 }
             );
         }
-       
+
+        [HttpGet("{id}")]
+
+        public async Task<IActionResult> GetUserById([FromRoute] string id)
+        {
+            try{
+                var user = await _userManager.Users.FirstOrDefaultAsync( x => x.Id == id);
+
+                if(user == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                var userDto = new NewUserDto
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Token = _tokenService.CreateToken(user)
+                };
+
+                return Ok(userDto);
+            }
+            catch(Exception ex){
+                return StatusCode(500, ex.Message);
+            }
+    
+        }
+
+
     }
 }
 
-//UserManager class is used to manage user information
