@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
@@ -109,33 +110,68 @@ namespace api.Controllers
             );
         }
 
-        [HttpGet("{id}")]
-
-        public async Task<IActionResult> GetUserById([FromRoute] string id)
+       
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
         {
-            try{
-                var user = await _userManager.Users.FirstOrDefaultAsync( x => x.Id == id);
+            // Pobierz token z nagłówka Authorization
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "").Trim();
 
-                if(user == null)
+            Console.WriteLine($"token: {token}");
+ 
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized("Token not found");
+            }
+
+            try
+            {
+
+                // Walidacja i dekodowanie tokenu
+                var handler = new JwtSecurityTokenHandler();
+
+                Console.WriteLine($"handelr{handler}");
+
+                var jwtToken = handler.ReadJwtToken(token);
+
+                Console.WriteLine($"jwt{jwtToken}");
+
+                // Uzyskanie ID użytkownika z tokenu (zakładając, że token zawiera id w claim)
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+                  
+        
+            Console.WriteLine($"userid{userId}");
+        
+
+                if (string.IsNullOrEmpty(userId))
                 {
-                    return NotFound("User not found");
+                    return Unauthorized("Invalid token dupadupadupa");
                 }
 
-                var userDto = new NewUserDto
+                // Pobranie użytkownika z bazy danych
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user == null)
+                {
+                    return Unauthorized("Invalid token dupadupa");
+                }
+
+                // Zwrócenie danych użytkownika wraz z nowym tokenem
+                return Ok(new NewUserDto
                 {
                     UserName = user.UserName,
                     Email = user.Email,
+                    Role = user.Role,
                     Token = _tokenService.CreateToken(user)
-                };
-
-                return Ok(userDto);
+                });
             }
-            catch(Exception ex){
-                return StatusCode(500, ex.Message);
+            catch (Exception)
+            {
+                return Unauthorized("Invalid token dupa");
             }
-    
         }
 
+       
 
     }
 }

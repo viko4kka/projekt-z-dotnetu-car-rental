@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using api.Interface;
 using api.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace api.Service
@@ -25,8 +26,11 @@ namespace api.Service
         {
             var claims = new List<Claim>
             {
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName)
+                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
+
+                // new Claim(JwtRegisteredClaimNames.)
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

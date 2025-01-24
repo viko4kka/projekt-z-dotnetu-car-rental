@@ -10,6 +10,7 @@ using api.Dtos.Car;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers
 {
@@ -24,6 +25,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
+       
         public async Task<IActionResult> GetAllCars(){
             var cars = await _context.Cars.ToListAsync();
 
