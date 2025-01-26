@@ -30,7 +30,8 @@ namespace api.Service
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
 
-                // new Claim(JwtRegisteredClaimNames.)
+                new Claim(ClaimTypes.Role, user.Role)
+
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

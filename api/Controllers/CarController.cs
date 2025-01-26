@@ -34,6 +34,8 @@ namespace api.Controllers
             return Ok(cars);
         }
 
+        //metoda dostępna dla admina i klienta(widok szczegolow auta)
+        // [Authorize(Roles = "Admin,Client")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCarById([FromRoute] int id )
         {
@@ -47,6 +49,8 @@ namespace api.Controllers
             return Ok(car.ToCarDto());
         }
 
+        //metoda dostępna tylko dla admina
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateCar([FromBody] CreateCarRequestDto carDto)
         {
@@ -58,6 +62,8 @@ namespace api.Controllers
             return CreatedAtAction(nameof(GetCarById), new {id = carModel.CarId}, carModel.ToCarDto());
         }
 
+        //metoda dostępna tylko dla admina
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         [Route("{id}")]
 
@@ -87,7 +93,9 @@ namespace api.Controllers
 
         }
 
+        //metoda dostępna tylko dla admina
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteCar([FromRoute] int id)
