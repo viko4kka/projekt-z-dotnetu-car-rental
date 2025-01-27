@@ -28,10 +28,8 @@ namespace api.Controllers
        
         public async Task<IActionResult> GetAllCars(){
             var cars = await _context.Cars.ToListAsync();
-
-            var carDto = cars.Select( s=> s.ToCarDto());
-
-            return Ok(cars);
+            var carDto = cars.Select( s=> s.ToCarDto()).ToList();
+            return Ok(carDto);
         }
 
         //metoda dostępna dla admina i klienta(widok szczegolow auta)
@@ -54,9 +52,14 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCar([FromBody] CreateCarRequestDto carDto)
         {
-            var carModel = carDto.ToCarFromCreateDto();
 
-           await  _context.Cars.AddAsync(carModel);
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var carModel = carDto.ToCarFromCreateDto();
+            await  _context.Cars.AddAsync(carModel);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCarById), new {id = carModel.CarId}, carModel.ToCarDto());
@@ -69,7 +72,13 @@ namespace api.Controllers
 
         public async Task<IActionResult> UpdateCar([FromRoute] int id, [FromBody] UpdateCarRequestDto updateCarDto)
         {
-            var carModel = await _context.Cars.FirstOrDefaultAsync( x=> x.CarId == id);
+
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var carModel = await _context.Cars.FirstOrDefaultAsync( x => x.CarId == id);
 
             if(carModel == null)
             {
@@ -84,10 +93,10 @@ namespace api.Controllers
             carModel.FuelType = updateCarDto.FuelType;
             carModel.Color = updateCarDto.Color;
             carModel.PricePerDay = updateCarDto.PricePerDay;
-            carModel.Status = updateCarDto.Status;
+            // carModel.Status = updateCarDto.Status;
             carModel.ImageUrl = updateCarDto.ImageUrl;
 
-           await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return Ok(carModel.ToCarDto());
 

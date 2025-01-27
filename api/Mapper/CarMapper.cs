@@ -42,7 +42,7 @@ namespace api.Mapper
                 FuelType = carDto.FuelType,
                 Color = carDto.Color,
                 PricePerDay = carDto.PricePerDay,
-                Status = carDto.Status,
+                // Status = carDto.Status,
                 ImageUrl = carDto.ImageUrl
 
             };

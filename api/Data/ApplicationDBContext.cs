@@ -18,9 +18,17 @@ namespace api.Data
 
         //  public DbSet<User> Users { get; set; } 
         public DbSet<Car> Cars { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Car>()
+            .HasMany(c => c.Reservations)
+            .WithOne(r => r.Car)
+            .HasForeignKey(r => r.CarId);
+
             List<IdentityRole> roles = new List<IdentityRole>
             {
                 new IdentityRole

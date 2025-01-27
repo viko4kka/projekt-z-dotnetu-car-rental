@@ -114,7 +114,7 @@ namespace api.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            // Pobierz token z nagłówka Authorization
+            
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "").Trim();
 
             Console.WriteLine($"token: {token}");
@@ -127,7 +127,7 @@ namespace api.Controllers
             try
             {
 
-                // Walidacja i dekodowanie tokenu
+                
                 var handler = new JwtSecurityTokenHandler();
 
                 Console.WriteLine($"handelr{handler}");
@@ -136,7 +136,7 @@ namespace api.Controllers
 
                 Console.WriteLine($"jwt{jwtToken}");
 
-                // Uzyskanie ID użytkownika z tokenu (zakładając, że token zawiera id w claim)
+                
                 var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
                   
         
@@ -148,7 +148,7 @@ namespace api.Controllers
                     return Unauthorized("Invalid token dupadupadupa");
                 }
 
-                // Pobranie użytkownika z bazy danych
+                
                 var user = await _userManager.FindByIdAsync(userId);
 
                 if (user == null)
@@ -156,7 +156,7 @@ namespace api.Controllers
                     return Unauthorized("Invalid token dupadupa");
                 }
 
-                // Zwrócenie danych użytkownika wraz z nowym tokenem
+                
                 return Ok(new NewUserDto
                 {
                     UserName = user.UserName,

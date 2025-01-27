@@ -15,7 +15,7 @@ namespace api.Dtos.Car
         public string? FuelType { get; set; }
         public string? Color { get; set; }
         public decimal PricePerDay { get; set; }
-        public string? Status { get; set; }
+        // public string? Status { get; set; }
         public string? ImageUrl { get; set; }
     }
 }
