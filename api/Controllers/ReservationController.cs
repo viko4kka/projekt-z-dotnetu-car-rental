@@ -87,5 +87,33 @@ namespace api.Controllers
             
             return Ok(reservation.ToReservationDto());
         }
+
+       [HttpPost("{reservationId}/return")]
+        public async Task<IActionResult> ReturnCar(int reservationId)
+        {
+            var reservation = await _context.Reservations
+                .Include(r => r.Car)
+                .FirstOrDefaultAsync(r => r.ReservationId == reservationId);
+
+            if (reservation == null)
+                return NotFound("Reservation not found.");
+
+            // Zmieniamy czas zwrotu na UTC
+            reservation.EndDate = DateTime.UtcNow;
+
+            // Zmieniamy status samochodu na "Available"
+            reservation.Car.CarStatus = "Available";
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new { Message = "Car returned successfully." });
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, "An error occurred while updating the reservation: " + ex.Message);
+            }
+        }
+
     }
 }

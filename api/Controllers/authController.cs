@@ -145,7 +145,7 @@ namespace api.Controllers
 
                 if (string.IsNullOrEmpty(userId))
                 {
-                    return Unauthorized("Invalid token dupadupadupa");
+                    return Unauthorized("Invalid token");
                 }
 
                 
@@ -153,7 +153,7 @@ namespace api.Controllers
 
                 if (user == null)
                 {
-                    return Unauthorized("Invalid token dupadupa");
+                    return Unauthorized("Invalid token");
                 }
 
                 
@@ -167,7 +167,7 @@ namespace api.Controllers
             }
             catch (Exception)
             {
-                return Unauthorized("Invalid token dupa");
+                return Unauthorized("Invalid token");
             }
         }
 
