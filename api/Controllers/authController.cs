@@ -48,21 +48,28 @@ namespace api.Controllers
                 var user = new User
                 {
                     UserName = registerDto.Username,
-                    Email = registerDto.Email
+                    Email = registerDto.Email,
+                    Role = registerDto.Role
                 };
 
                 var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
 
                 if(createdUser.Succeeded){
 
-                    var roleResult = await _userManager.AddToRoleAsync(user, "Client");
+                    var roleResult = await _userManager.AddToRoleAsync(user, registerDto.Role);
+
+
                     
                     if(roleResult.Succeeded){
+
+                        user.Role = registerDto.Role;
+
                         return Ok(
                             new NewUserDto
                             {
                                 UserName = user.UserName,
                                 Email = user.Email,
+                                Role = user.Role,
                                 Token = _tokenService.CreateToken(user)
                             }
                         );
@@ -100,11 +107,15 @@ namespace api.Controllers
 
             if(!result.Succeeded) return Unauthorized("Invalid password");
 
+            var role = await _userManager.GetRolesAsync(user);
+            var userRole = role.FirstOrDefault() ?? "Client";
+
             return Ok(
                 new NewUserDto
                 {
                     UserName = user.UserName,
                     Email = user.Email,
+                    Role = user.Role,
                     Token = _tokenService.CreateToken(user)
                 }
             );
